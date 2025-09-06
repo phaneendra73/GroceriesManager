@@ -3,7 +3,6 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import ThemeProviderWrapper from '@/components/theme-provider'
-import ThemeToggle from '@/components/theme-toggle'
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,11 +43,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProviderWrapper>
-          <div className={`${inter.variable} ${robotoMono.variable} antialiased bg-background text-foreground min-h-screen relative`}>
-            <ThemeToggle />
-            {children}
-            <Toaster />
-          </div>
+            <div className={`${inter.variable} ${robotoMono.variable} antialiased bg-background text-foreground min-h-screen relative`}>
+              {children}
+              <Toaster />
+            </div>
         </ThemeProviderWrapper>
       </body>
     </html>

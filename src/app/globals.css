@@ -59,11 +59,6 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  /* neon green accents */
-  --primary: #00ff66;
-  --accent: #00ff66;
-  --primary-foreground: #00110a;
-  --accent-foreground: #00110a;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -102,10 +97,7 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   /* neon green accents in dark mode */
-  --primary: #00ff66;
-  --accent: #00ff66;
-  --primary-foreground: #00110a;
-  --accent-foreground: #00110a;
+  /* keep accent colors consistent with the design system (no neon) */
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
