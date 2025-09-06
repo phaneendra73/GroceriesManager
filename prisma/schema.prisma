@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DIRECT_DATABASE_URL")
+}
+
+model User {
+  id              String            @id @default(cuid())
+  email           String?           @unique
+  name            String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  purchaseHistory PurchaseHistory[]
+  purchaseLists   PurchaseList[]
+  templates       Template[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       Item[]
+
+  @@map("categories")
+}
+
+model Item {
+  id              String            @id @default(cuid())
+  name            String
+  description     String?
+  imageUrl        String?
+  defaultQuantity Int               @default(1)
+  price           Float?            @default(0.0)
+  notes           String?
+  available       Boolean           @default(true)
+  categoryId      String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  category        Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  purchaseHistory PurchaseHistory[]
+  purchaseItems   PurchaseItem[]
+  templates       TemplateItem[]
+
+  @@map("items")
+}
+
+model Template {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  userId      String?
+  isDefault   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  items       TemplateItem[]
+  user        User?          @relation(fields: [userId], references: [id])
+
+  @@map("templates")
+}
+
+model TemplateItem {
+  id         String   @id @default(cuid())
+  templateId String
+  itemId     String
+  quantity   Int      @default(1)
+  notes      String?
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, itemId])
+  @@map("template_items")
+}
+
+model PurchaseList {
+  id        String         @id @default(cuid())
+  name      String?
+  userId    String?
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  items     PurchaseItem[]
+  user      User?          @relation(fields: [userId], references: [id])
+
+  @@map("purchase_lists")
+}
+
+model PurchaseItem {
+  id             String       @id @default(cuid())
+  purchaseListId String
+  itemId         String
+  quantity       Int          @default(1)
+  notes          String?
+  isPurchased    Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  item           Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  purchaseList   PurchaseList @relation(fields: [purchaseListId], references: [id], onDelete: Cascade)
+
+  @@unique([purchaseListId, itemId])
+  @@map("purchase_items")
+}
+
+model PurchaseHistory {
+  id          String   @id @default(cuid())
+  userId      String?
+  itemId      String
+  quantity    Int
+  price       Float?   @default(0.0)
+  totalAmount Float?   @default(0.0)
+  notes       String?
+  createdAt   DateTime @default(now())
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("purchase_history")
+}
